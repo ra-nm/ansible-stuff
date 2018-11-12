@@ -1,0 +1,10 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Delete Resource Group
+      azure_rm_resourcegroup:
+        name: table5ravmrg
+        state: absent
+        force: yes
+
