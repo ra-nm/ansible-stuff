@@ -1,35 +1,43 @@
 - name: Create  VM
   hosts: localhost
   connection: local
+  vars:
+    group_name: table5ravmrg
+    vnet_name: table5ravmvnet
+    subnet_name: table5ravmsubnet
+    nsg_name: table5ravmnsg
+    ip_name: table5ravmpublicip
+    nic_name: table5ravmnic
+    vm_name: table5ravm
   tasks:
   - name: Create resource group
     azure_rm_resourcegroup:
-      name: table5ravmrg
+      name: {{ group_name }}
       location: centralus
   - name: Create virtual network
     azure_rm_virtualnetwork:
-      resource_group: table5ravmrg
-      name: table5ravmvnet
+      resource_group: {{ group_name }}
+      name: {{ vnet_name }}
       address_prefixes: "10.0.0.0/16"
   - name: Add subnet
     azure_rm_subnet:
-      resource_group: table5ravmrg
-      name: table5ravmsubnet
+      resource_group: {{ group_name }}
+      name: {{ subnet_name }}
       address_prefix: "10.0.1.0/24"
-      virtual_network: table5ravmvnet
+      virtual_network: {{ vnet_name }}
   - name: Create public IP address
     azure_rm_publicipaddress:
-      resource_group: table5ravmrg
+      resource_group: {{ group_name }}
       allocation_method: Static
-      name: table5ravmpublicip
+      name: {{ ip_name }}
     register: output_ip_address
-  - name: Output public IP 
+  - name: Output public IP
     debug:
       msg: "Public IP is {{ output_ip_address.state.ip_address }}."
   - name: Create Network Security Group that allows SSH
     azure_rm_securitygroup:
-      resource_group: table5ravmrg
-      name: table5ravmnsg
+      resource_group: {{ group_name }}
+      name: {{ nsg_name }}
       rules:
         - name: SSH
           protocol: Tcp
@@ -39,16 +47,16 @@
           direction: Inbound
   - name: Create virtual network inteface card
     azure_rm_networkinterface:
-      resource_group: table5ravmrg
-      name: table5ravmnic
-      virtual_network: table5ravmvnet
-      subnet: table5ravmsubnet
-      public_ip_name: table5ravmpublicip
-      security_group: table5ravmsubnet
+      resource_group: {{ group_name }}
+      name: {{ nic_name }}
+      virtual_network: {{ vnet_name }}
+      subnet: {{ subnet_name }}
+      public_ip_name: {{ ip_name }}
+      security_group: {{ nsg_name }}
   - name: Create VM
     azure_rm_virtualmachine:
-      resource_group: table5ravmrg
-      name: table5ravm
+      resource_group: {{ group_name }}
+      name: {{ vm_name }}
       vm_size: Standard_DS1_v2
       admin_username: azureops
       ssh_password_enabled: false
@@ -56,7 +64,7 @@
         - path: /home/azureops/.ssh/authorized_keys
           key_data: |
             {{ lookup('file','/home/azureops/.ssh/id_rsa.pub') }}
-      network_interfaces: table5ravmnic
+      network_interfaces: {{ nic_name }}
       image:
         offer: UbuntuServer
         publisher: Canonical
