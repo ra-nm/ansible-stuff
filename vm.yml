@@ -44,3 +44,6 @@
     loop_control:
       loop_var: vm
 
+- include: apache.yml
+- include: haproxy.yml
+
