@@ -38,8 +38,9 @@
           direction: Inbound
   - include_tasks: vm-details.yml
     loop:
-      - { name: 'one', tag: 'nginx' }
+      - { name: 'one', tag: 'apache' }
       - { name: 'two', tag: 'apache' }
+      - { name: 'three', tag: 'haproxy' }
     loop_control:
       loop_var: vm
 
