@@ -1,0 +1,10 @@
+---
+prefix: table5ravm
+group_name: "{{prefix}}rg"
+vnet_name: "{{prefix}}vnet"
+subnet_name: "{{prefix}}subnet"
+nsg_name: "{{prefix}}nsg"
+ip_name: "{{prefix}}publicip"
+nic_name: "{{prefix}}nic"
+vm_name: "{{prefix}}"
+
