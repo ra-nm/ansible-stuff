@@ -1,4 +1,4 @@
-- hosts: web
+- hosts: azure
   tasks:
     - name: Installs apache web server
       apt:
