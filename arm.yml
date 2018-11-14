@@ -1,0 +1,12 @@
+---
+- hosts: localhost
+  connection: local
+  tasks:
+    - name: Deploy ARM Template
+      azure_rm_deployment:
+        state: present
+        resource_group: table5rawebapp2rg
+        template_link: https://raw.githubusercontent.com/ra-nm/arm/master/template.json
+        parameters_link: https://raw.githubusercontent.com/ra-nm/arm/master/parameters.json
+        location: centralus
+
